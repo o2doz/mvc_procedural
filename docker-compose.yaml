@@ -15,7 +15,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: testdb
+      MYSQL_DATABASE: pixel_parts
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:

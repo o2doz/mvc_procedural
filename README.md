@@ -1,12 +1,12 @@
-# TP — Mini boutique JNR Puff en PHP procédural (MVC)
+# TP — Mini boutique PixelParts en PHP procédural (MVC)
 
 ## Contexte
 
-Vous allez développer un mini-site e-commerce pour **JNR Puff**, un revendeur en ligne
-de puffs jetables et pods. L'objectif n'est pas de faire un site complet, mais de
-**mettre en pratique le pattern MVC** (Modèle - Vue - Contrôleur) en **PHP
-procédural** (sans aucune classe), avec une base de données **MySQL** accédée via
-l'extension **`mysqli`**.
+Vous allez développer un mini-site e-commerce pour **PixelParts**, un revendeur en
+ligne de **composants PC**, **consoles de jeux** et **périphériques gaming**.
+L'objectif n'est pas de faire un site complet, mais de **mettre en pratique le
+pattern MVC** (Modèle - Vue - Contrôleur) en **PHP procédural** (sans aucune
+classe), avec une base de données **MySQL** accédée via l'extension **`mysqli`**.
 
 À la fin du TP vous disposerez :
 
@@ -30,7 +30,7 @@ le tout organisé selon une séparation stricte modèles / vues / contrôleurs.
 À recréer à l'identique avant de commencer :
 
 ```
-jnr_puff/
+pixel_parts/
 ├── public/
 │   ├── index.php          # Front Controller (point d'entrée unique)
 │   └── assets/
@@ -71,7 +71,7 @@ jnr_puff/
 
 Vous travaillerez sur deux tables : `categories` et `products`.
 
-1. Créer une base nommée `jnr_puff` (encodage `utf8mb4`).
+1. Créer une base nommée `pixel_parts` (encodage `utf8mb4`).
 2. Recopier le script suivant dans `sql/schema.sql` puis l'exécuter dans la base.
 
 ```sql
@@ -81,37 +81,37 @@ CREATE TABLE categories (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE products (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT NOT NULL,
-    name        VARCHAR(120) NOT NULL,
-    flavor      VARCHAR(80)  NOT NULL,
-    nicotine_mg DECIMAL(4,2) NOT NULL DEFAULT 0,
-    puffs       INT          NOT NULL DEFAULT 0,
-    price       DECIMAL(6,2) NOT NULL,
-    stock       INT          NOT NULL DEFAULT 0,
-    image_url   VARCHAR(255) DEFAULT NULL,
-    description TEXT,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    category_id     INT NOT NULL,
+    name            VARCHAR(120) NOT NULL,
+    brand           VARCHAR(80)  NOT NULL,
+    model           VARCHAR(120) NOT NULL,
+    warranty_months INT          NOT NULL DEFAULT 24,
+    price           DECIMAL(8,2) NOT NULL,
+    stock           INT          NOT NULL DEFAULT 0,
+    image_url       VARCHAR(255) DEFAULT NULL,
+    description     TEXT,
     CONSTRAINT fk_products_category
         FOREIGN KEY (category_id) REFERENCES categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO categories (name) VALUES
-    ('Puff jetable'),
-    ('Pod rechargeable'),
-    ('E-liquide');
+    ('Composant PC'),
+    ('Console'),
+    ('Périphérique');
 
-INSERT INTO products (category_id, name, flavor, nicotine_mg, puffs, price, stock, description) VALUES
-    (1, 'JNR Bar 600',     'Fraise glacée',     20.00,  600, 7.90,  50, 'Puff jetable 600 bouffées, saveur fraise glacée.'),
-    (1, 'JNR Bar 600',     'Mangue passion',    20.00,  600, 7.90,  35, 'Puff jetable 600 bouffées, saveur mangue passion.'),
-    (1, 'JNR Max 2000',    'Pastèque ice',      20.00, 2000, 12.50, 20, 'Puff longue durée 2000 bouffées.'),
-    (1, 'JNR Max 2000',    'Cola cherry',       20.00, 2000, 12.50, 18, 'Puff longue durée 2000 bouffées, saveur cola cherry.'),
-    (2, 'JNR Pod Mini',    'Sans saveur',        0.00,    0, 19.90, 12, 'Pod rechargeable compact, batterie 800 mAh.'),
-    (2, 'JNR Pod Pro',     'Sans saveur',        0.00,    0, 29.90,  8, 'Pod rechargeable haut de gamme, batterie 1500 mAh.'),
-    (3, 'E-liquide 10ml',  'Menthe polaire',    12.00,    0,  4.90, 60, 'Flacon e-liquide 10 ml, base 50/50.'),
-    (3, 'E-liquide 10ml',  'Vanille caramel',    6.00,    0,  4.90, 45, 'Flacon e-liquide 10 ml, base 50/50.');
+INSERT INTO products (category_id, name, brand, model, warranty_months, price, stock, description) VALUES
+    (1, 'Carte graphique',    'NVIDIA',    'GeForce RTX 4070',         36, 599.00, 15, 'GPU milieu de gamme, 12 Go GDDR6X, idéal 1440p.'),
+    (1, 'Processeur',          'AMD',       'Ryzen 7 7800X3D',          36, 449.00, 22, 'CPU 8 cœurs / 16 threads, cache 3D V-Cache, socket AM5.'),
+    (1, 'SSD NVMe',            'Samsung',   '990 Pro 2 To',             60, 199.00, 40, 'SSD M.2 PCIe Gen4, lecture jusqu''à 7450 Mo/s.'),
+    (1, 'Mémoire DDR5',        'Corsair',   'Vengeance 32 Go 6000 MHz', 120,129.00, 30, 'Kit 2x16 Go DDR5-6000 CL30, profil EXPO.'),
+    (2, 'Console de salon',    'Sony',      'PlayStation 5 Slim',       24, 549.00, 10, 'Console nouvelle génération, SSD 1 To, manette DualSense.'),
+    (2, 'Console portable',    'Nintendo',  'Switch OLED',              12, 349.00, 18, 'Console hybride, écran OLED 7", 64 Go de stockage.'),
+    (3, 'Clavier mécanique',   'Logitech',  'G Pro X TKL',              24, 219.00, 25, 'Clavier sans fil tenkeyless, switches GX, rétroéclairage RGB.'),
+    (3, 'Souris gamer',        'Razer',     'DeathAdder V3',            24,  89.00, 50, 'Souris ergonomique, capteur Focus Pro 30K, 59 g.');
 ```
 
-> **À avoir à la fin de cette partie** : la base `jnr_puff` contient les deux
+> **À avoir à la fin de cette partie** : la base `pixel_parts` contient les deux
 > tables avec les huit produits seed et trois catégories. Vérifiez avec
 > `SELECT COUNT(*) FROM products;` (résultat attendu : `8`).
 
@@ -130,7 +130,7 @@ exposer **une fonction** `db_connect()` qui retourne la ressource `mysqli`.
 const DB_HOST = 'localhost';
 const DB_USER = 'root';
 const DB_PASS = '';
-const DB_NAME = 'jnr_puff';
+const DB_NAME = 'pixel_parts';
 
 function db_connect(): mysqli
 {
@@ -261,12 +261,12 @@ function render(string $view, array $data = []): void
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>JNR Puff</title>
+    <title>PixelParts</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 <header class="topbar">
-    <a class="logo" href="/?route=home">JNR Puff</a>
+    <a class="logo" href="/?route=home">PixelParts</a>
     <nav>
         <a href="/?route=home">Accueil</a>
         <a href="/?route=products">Catalogue</a>
@@ -283,7 +283,7 @@ function render(string $view, array $data = []): void
 ```php
 </main>
 <footer class="footer">
-    <p>&copy; <?= date('Y') ?> JNR Puff — projet pédagogique</p>
+    <p>&copy; <?= date('Y') ?> PixelParts — projet pédagogique</p>
 </footer>
 </body>
 </html>
@@ -333,7 +333,7 @@ Contrôleur → Vue.
 function home_index(): void
 {
     // TODO : appeler render() sur la vue 'home/index' en passant un titre
-    //        (ex. 'Bienvenue sur JNR Puff') dans le tableau de données.
+    //        (ex. 'Bienvenue sur PixelParts') dans le tableau de données.
 }
 ```
 
@@ -341,7 +341,7 @@ function home_index(): void
 
 ```php
 <h1><?= htmlspecialchars($title) ?></h1>
-<p>Découvrez notre sélection de puffs, pods et e-liquides.</p>
+<p>Découvrez notre sélection de composants PC, consoles et périphériques gaming.</p>
 <p><a class="btn" href="/?route=products">Voir le catalogue</a></p>
 ```
 
@@ -373,7 +373,7 @@ function get_all_products(): array
 
     // TODO : écrire la requête SQL qui sélectionne tous les produits joints à leur catégorie.
     //        Le résultat doit contenir toutes les colonnes de products + une colonne category_name.
-    //        Trier par nom puis par saveur.
+    //        Trier par marque puis par nom.
 
     // TODO : exécuter la requête avec mysqli_query().
 
@@ -442,12 +442,12 @@ function product_show(): void
             <article class="card">
                 <small><?= htmlspecialchars($p['category_name']) ?></small>
                 <h3><?= htmlspecialchars($p['name']) ?></h3>
-                <p><?= htmlspecialchars($p['flavor']) ?></p>
-                <?php if ((float) $p['nicotine_mg'] > 0): ?>
-                    <p>Nicotine : <?= number_format((float) $p['nicotine_mg'], 1) ?> mg/ml</p>
-                <?php endif; ?>
-                <?php if ((int) $p['puffs'] > 0): ?>
-                    <p><?= (int) $p['puffs'] ?> bouffées</p>
+                <p>
+                    <strong><?= htmlspecialchars($p['brand']) ?></strong>
+                    — <?= htmlspecialchars($p['model']) ?>
+                </p>
+                <?php if ((int) $p['warranty_months'] > 0): ?>
+                    <p>Garantie : <?= (int) $p['warranty_months'] ?> mois</p>
                 <?php endif; ?>
                 <p class="price"><?= number_format((float) $p['price'], 2) ?> €</p>
                 <a class="btn" href="/?route=products&amp;action=show&amp;id=<?= (int) $p['id'] ?>">
@@ -466,11 +466,13 @@ panier :
 <p><a href="/?route=products">&larr; Retour au catalogue</a></p>
 
 <h1>
-    <?= htmlspecialchars($product['name']) ?>
-    — <?= htmlspecialchars($product['flavor']) ?>
+    <?= htmlspecialchars($product['brand']) ?>
+    <?= htmlspecialchars($product['model']) ?>
 </h1>
 
 <p><strong>Catégorie :</strong> <?= htmlspecialchars($product['category_name']) ?></p>
+<p><strong>Type :</strong> <?= htmlspecialchars($product['name']) ?></p>
+<p><strong>Garantie :</strong> <?= (int) $product['warranty_months'] ?> mois</p>
 <p class="price"><?= number_format((float) $product['price'], 2) ?> €</p>
 <p><?= nl2br(htmlspecialchars($product['description'] ?? '')) ?></p>
 <p>Stock disponible : <?= (int) $product['stock'] ?></p>
@@ -588,8 +590,8 @@ case 'cart':
             <?php foreach ($items as $item): ?>
                 <tr>
                     <td>
-                        <?= htmlspecialchars($item['product']['name']) ?>
-                        — <?= htmlspecialchars($item['product']['flavor']) ?>
+                        <?= htmlspecialchars($item['product']['brand']) ?>
+                        <?= htmlspecialchars($item['product']['model']) ?>
                     </td>
                     <td><?= number_format((float) $item['product']['price'], 2) ?> €</td>
                     <td><?= (int) $item['quantity'] ?></td>
@@ -644,7 +646,8 @@ Avant de rendre le TP, contrôlez **tous** les points suivants :
 
 Si vous avez terminé en avance :
 
-- Ajouter une route `?route=products&category=2` qui filtre par catégorie.
+- Ajouter une route `?route=products&category=2` qui filtre par catégorie
+  (composants, consoles ou périphériques).
 - Ajouter un tri par prix (asc/desc) via un paramètre `?sort=price_asc`.
 - Permettre la modification de la quantité directement depuis la vue panier.
 - Ajouter un message flash (via session) après ajout au panier.
