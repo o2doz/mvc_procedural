@@ -1,0 +1,15 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; margin: 0; background: #f7f7f9; color: #222; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #1a1a2e; color: #fff; }
+.topbar a { color: #fff; text-decoration: none; margin-left: 1rem; }
+.logo { font-weight: 700; font-size: 1.25rem; }
+.container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+.footer { text-align: center; padding: 2rem; color: #888; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.card { background: #fff; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+.card h3 { margin: .25rem 0; }
+.price { font-weight: 700; color: #c0392b; }
+.btn { display: inline-block; padding: .5rem 1rem; background: #1a1a2e; color: #fff; text-decoration: none; border: 0; border-radius: 4px; cursor: pointer; }
+.btn:hover { background: #16213e; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { padding: .75rem; border-bottom: 1px solid #eee; text-align: left; }
